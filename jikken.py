@@ -12,14 +12,14 @@ def main():
 		conn.commit()
 	conn.close()
 	mg = RateMG.RateMG()
-	for i in range(20):
+	for i in range(30):
 		imp = rm.sample(names,2)
 		crw = []
 		for n in names:
 			if not n in imp:
 				crw.append(n)
 		if "SA" in imp:
-			if rm.randrange(10) < 6:
+			if rm.randrange(10) < 7:
 				mg.rating(imp,crw,1)
 			else:
 				mg.rating(imp,crw)
@@ -29,7 +29,7 @@ def main():
 			else:
 				mg.rating(imp,crw,1)
 		else:
-			if rm.randrange(10) < 7:
+			if rm.randrange(10) < 6:
 				mg.rating(imp, crw)
 			else:
 				mg.rating(imp,crw,1)

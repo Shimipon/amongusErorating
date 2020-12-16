@@ -3,13 +3,17 @@ import sqlite3
 
 
 class RateMG:
-	def regist(self, name, im = 1500, cr = 1500):
+	#新しいプレイヤーをデータベースに登録
+	#register the new player 
+	def register(self, name, im = 1500, cr = 1500):
 		conn = sqlite3.connect('PlayerList.db')
 		c = conn.cursor()
 		c.execute("INSERT INTO Players (name, im, cr) VALUES (?, ?, ?) ", (name, im, cr,))
 		conn.commit()
 		conn.close()
 
+	#プレイヤーをデータベースから削除
+	#delete the player
 	def delete(self, name):
 		conn = sqlite3.connect('PlayerList.db')
 		c = conn.cursor()
@@ -17,6 +21,8 @@ class RateMG:
 		conn.commit()
 		conn.close()
 
+	#CrewmateがImposterに勝つ確率をそれぞれのチームのレートを使って計算
+	#compute winning percentage of Crewmate
 	def win_CrwImp(self, IMP, CRW):
 		ISUM = 0.0
 		CSUM = 0.0
@@ -27,6 +33,8 @@ class RateMG:
 		divisor = 10.0 ** ((ISUM / len(IMP) - CSUM / len(CRW)) / 400.0) + 1
 		return 1.0 / divisor
 
+	#ImposterがCrewmateに勝つ確率をそれぞれのチームのレートを使って計算
+	#compute winning percentage of Imposter
 	def win_ImpCrw(self, IMP, CRW):
 		ISUM = 0.0
 		CSUM = 0.0
@@ -37,8 +45,9 @@ class RateMG:
 		divisor = 10.0 ** ((CSUM / len(CRW) - ISUM / len(IMP)) / 400.0) + 1
 		return 1.0 / divisor
 
-
-	def update(self, IMP, CRW, IWin = 0):
+	#試合の結果に応じて新しいレートを計算
+	#calculate new rating
+	def rating(self, IMP, CRW, IWin = 0):
 		conn = sqlite3.connect('PlayerList.db')
 		c = conn.cursor()
 		tIMP = []
@@ -82,7 +91,9 @@ class RateMG:
 			c.execute("UPDATE Players SET im = ?, cr = ? WHERE name = ?", (p[1], p[2], p[0],))
 			conn.commit()
 		conn.close()
-
+		
+	#現在のレートを調べる
+	#check rate of player
 	def check(self, NAME):
 		conn = sqlite3.connect('PlayerList.db')
 		c = conn.cursor()
